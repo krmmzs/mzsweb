@@ -17,6 +17,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('', include('game.urls')), #gameapp is opened by default
+    #path('', include('game.urls')), #gameapp is opened by default
     path('admin/', admin.site.urls),
 ]
