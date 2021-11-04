@@ -37,7 +37,8 @@ class MzsGameMenu
     {
         let outer = this;
         this.$single_mode.click(function(){
-            console.log("click single mode");
+            outer.hide();
+            outer.root.playground.show();
         });
         this.$multi_mode.click(function(){
             console.log("click multi mode");
@@ -46,6 +47,14 @@ class MzsGameMenu
             console.log("click settings");
         });
     }
+    show() // show the current page
+    {
+        this.$menu.show();
+    }
 
+    hide() // hide the current page
+    {
+        this.$menu.hide();
+    }
 
 }

@@ -37,7 +37,8 @@ class MzsGameMenu
     {
         let outer = this;
         this.$single_mode.click(function(){
-            console.log("click single mode");
+            outer.hide();
+            outer.root.playground.show();
         });
         this.$multi_mode.click(function(){
             console.log("click multi mode");
@@ -46,8 +47,50 @@ class MzsGameMenu
             console.log("click settings");
         });
     }
+    show() // show the current page
+    {
+        this.$menu.show();
+    }
+
+    hide() // hide the current page
+    {
+        this.$menu.hide();
+    }
+
+}
+class MzsGamePlayground
+{
+    constructor(root)
+    {
+        this.root = root;
+        this.$playground = $(`<div>游戏界面</div>`);
+
+        this.hide(); // The initial state is hide
+        this.root.$mzs_game.append(this.$playground);
+
+        this.start();
+    }
 
 
+    start()
+    {
+
+    }
+
+    update()
+    {
+
+    }
+    
+    show()
+    {
+        this.$playground.show();
+    }
+
+    hide()
+    {
+        this.$playground.hide();
+    }
 }
 class MzsGame
 {
@@ -56,5 +99,12 @@ class MzsGame
         this.id = id;
         this.$mzs_game = $('#' + id); // find this div
         this.menu = new MzsGameMenu(this); // creat a menu object
+        this.playground = new MzsGamePlayground(this);
+        this.start();
+    }
+
+    start()
+    {
+        
     }
 }
