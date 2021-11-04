@@ -7,11 +7,11 @@ class MzsGameMenu
 <div class="mzs-game-menu">
     <div class="mzs-game-menu-field">
         <div class="mzs-game-menu-field-item mzs-game-menu-field-item-single">
-            SinglePlayer
+            SinglePlay
         </div>
         <br>
         <div class="mzs-game-menu-field-item mzs-game-menu-field-item-multi">
-            MultPlayer
+            MultPlay
         </div>
         <br>
         <div class="mzs-game-menu-field-item mzs-game-menu-field-item-settings">
@@ -24,5 +24,14 @@ class MzsGameMenu
         this.$single = this.$menu.find('.mzs-game-menu-field-item-single');
         this.$multi = this.$menu.find('.mzs-game-menu-field-item-multi');
         this.$settings = this.$menu.find('.mzs-game-menu-field-item-settings');
+
+        this.start();
     }
+
+    start()
+    {
+        
+    }
+
+
 }
