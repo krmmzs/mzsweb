@@ -63,9 +63,9 @@ class MzsGamePlayground
     constructor(root)
     {
         this.root = root;
-        this.$playground = $(`<div>游戏界面</div>`);
+        this.$playground = $(`<div class="mzs-game-playground"></div>`);
 
-        this.hide(); // The initial state is hide
+        // this.hide(); // The initial state is hide
         this.root.$mzs_game.append(this.$playground);
 
         this.start();
@@ -92,13 +92,13 @@ class MzsGamePlayground
         this.$playground.hide();
     }
 }
-class MzsGame
+export class MzsGame
 {
     constructor(id)
     {
         this.id = id;
         this.$mzs_game = $('#' + id); // find this div
-        this.menu = new MzsGameMenu(this); // creat a menu object
+        // this.menu = new MzsGameMenu(this); // creat a menu object
         this.playground = new MzsGamePlayground(this);
         this.start();
     }
