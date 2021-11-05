@@ -2,7 +2,7 @@ let MZS_GAME_OBJECTS = [];
 
 class MzsGameObject
 {
-    construct()
+    constructor()
     {
         MZS_GAME_OBJECTS.push(this);
 
@@ -20,12 +20,12 @@ class MzsGameObject
 
     }
 
-    on_destory() // 在被销毁前执行一遍
+    on_destroy() // 在被销毁前执行一遍
     {
 
     }
 
-    destory()
+    destroy()
     {
         this.on_destroy();
 
@@ -65,8 +65,6 @@ let MZS_GAME_ANIMATTON = function(timestamp) // 这个参数表示我是在什�
 }
 
 requestAnimationFrame(MZS_GAME_ANIMATTON); // 这个参数作为时间戳传给该API:每次都会每一秒执行多少帧
-
-
 
 
 
