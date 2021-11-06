@@ -117,11 +117,10 @@ let MZS_GAME_ANIMATTON = function(timestamp) // 这个参数表示我是在什�
             obj.timedelta = timestamp - last_timestamp;
             obj.update();
         }
-
-        last_timestamp = timestamp;
-
-        requestAnimationFrame(MZS_GAME_ANIMATTON);
     }
+    last_timestamp = timestamp;
+
+    requestAnimationFrame(MZS_GAME_ANIMATTON);
 }
 
 requestAnimationFrame(MZS_GAME_ANIMATTON); // 这个参数作为时间戳传给该API:每次都会每一秒执行多少帧
@@ -182,6 +181,9 @@ class Player extends MzsGameObject
         this.ctx = this.playground.game_map.ctx;
         this.x = x;
         this.y = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.move_length = 0;
         this.radius = radius;
         this.color = color;
         this.speed = speed;
@@ -192,11 +194,58 @@ class Player extends MzsGameObject
 
     start()
     {
-        
+        if(this.is_me)
+        {
+            this.add_listening_events();
+        }
     }
-    
+
+    add_listening_events()
+    {
+        let outer = this;
+        this.playground.game_map.$canvas.on("contextmenu", function()
+        {
+            return false;
+        });
+        this.playground.game_map.$canvas.mousedown(function(e)
+        {
+            if(e.which === 3)
+            {
+                outer.move_to(e.clientX, e.clientY);
+            }
+        });
+    }
+
+    move_to(tx, ty)
+    {
+        this.move_length = this.get_dist(this.x, this.y, tx, ty);
+        let angle = Math.atan2(ty - this.y, tx - this.x);
+        this.vx = Math.cos(angle);
+        this.vy = Math.sin(angle);
+    }
+
+    get_dist(x1, y1, x2, y2)
+    {
+        let dx = x1 - x2;
+        let dy = y1 - y2;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+
     update()
     {
+        if(this.move_length < this.eps)
+        {
+            this.move_length = 0;
+            this.vx = this.vy = 0;
+        }
+        else
+        {
+            let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
+            this.x += this.vx * moved;
+            this.y += this.vy * moved;
+            this.move_length -= moved;
+        }
         this.render();
     }
 

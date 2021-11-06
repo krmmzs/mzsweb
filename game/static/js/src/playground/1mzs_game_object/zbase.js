@@ -57,11 +57,10 @@ let MZS_GAME_ANIMATTON = function(timestamp) // 这个参数表示我是在什�
             obj.timedelta = timestamp - last_timestamp;
             obj.update();
         }
-
-        last_timestamp = timestamp;
-
-        requestAnimationFrame(MZS_GAME_ANIMATTON);
     }
+    last_timestamp = timestamp;
+
+    requestAnimationFrame(MZS_GAME_ANIMATTON);
 }
 
 requestAnimationFrame(MZS_GAME_ANIMATTON); // 这个参数作为时间戳传给该API:每次都会每一秒执行多少帧
