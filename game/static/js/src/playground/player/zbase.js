@@ -28,6 +28,7 @@ class Player extends MzsGameObject
     {
         if(this.is_me)
         {
+            
             this.add_listening_events();
         }
         else
@@ -134,11 +135,12 @@ class Player extends MzsGameObject
         if(!this.is_me && this.spent_time > 4 && Math.random() < 1 / 300.0) // 希望理论上5秒1发, 所以如果随机数产生是小于1/300, 实际上可能会产生连发, 但是后面会有一段时间不发...所以是期望的
         {
             let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
-            while(player === this)
+            while(player === this && this.playground.players.length > 1)
                 player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
             let tx = player.x + player.speed * this.vx * this.timedelta / 1000 * 0.3;
             let ty = player.y + player.speed * this.vy * this.timedelta / 1000 * 0.3;
             this.shoot_fireball(tx, ty);
+
         }
 
         if(this.damage_speed > 10) // 失去原先的方向和速度, 被击退的方向和速度替代, 此时速度受到摩擦力影响
