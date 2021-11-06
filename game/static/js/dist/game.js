@@ -166,7 +166,7 @@ class GameMap extends MzsGameObject
 
     render()
     {
-        this.ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+        this.ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; // 第四个参数是可以改变图形覆盖颜色的速度, 这样可以改变球体运动的残影
         this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     }
 
@@ -198,6 +198,12 @@ class Player extends MzsGameObject
         if(this.is_me)
         {
             this.add_listening_events();
+        }
+        else
+        {
+            let tx = Math.random() * this.playground.width;
+            let ty = Math.random() * this.playground.height;
+            this.move_to(tx, ty);
         }
     }
 
@@ -269,6 +275,13 @@ class Player extends MzsGameObject
         {
             this.move_length = 0;
             this.vx = this.vy = 0;
+            if(!this.is_me)
+            {
+                let tx = Math.random() * this.playground.width;
+                let ty = Math.random() * this.playground.height;
+                this.move_to(tx, ty);
+            }
+
         }
         else
         {
@@ -357,7 +370,12 @@ class MzsGamePlayground
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
         this.palyers = [];
-        this.palyers.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.15, true))
+        this.palyers.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.15, true));
+        
+        for(let i = 0; i < 5; i ++)
+        {
+            this.palyers.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "blue", this.height * 0.15, false));
+        }
 
         this.start();
     }

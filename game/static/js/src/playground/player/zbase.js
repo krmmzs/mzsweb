@@ -25,6 +25,12 @@ class Player extends MzsGameObject
         {
             this.add_listening_events();
         }
+        else
+        {
+            let tx = Math.random() * this.playground.width;
+            let ty = Math.random() * this.playground.height;
+            this.move_to(tx, ty);
+        }
     }
 
     add_listening_events()
@@ -95,6 +101,13 @@ class Player extends MzsGameObject
         {
             this.move_length = 0;
             this.vx = this.vy = 0;
+            if(!this.is_me)
+            {
+                let tx = Math.random() * this.playground.width;
+                let ty = Math.random() * this.playground.height;
+                this.move_to(tx, ty);
+            }
+
         }
         else
         {
