@@ -26,7 +26,6 @@ class Particle extends MzsGameObject
     {
         if(this.move_length < this.eps || this.speed < this.eps)
         {
-            console.log("!!!");
             this.destroy();
             return false;
         }

@@ -19,6 +19,7 @@ class Player extends MzsGameObject
         this.is_me = is_me;
         this.eps = 0.1;
         this.friction = 0.9; // 击退效果会有个摩擦力的物理状态
+        this.spent_time = 0;
         
         this.cur_skill = null; // 当前选的技能是什么
     }
@@ -117,9 +118,9 @@ class Player extends MzsGameObject
         if(this.radius < 10)
         {
             this.destroy();
+            this.on_destroy();
             return false;
         }
-        console.log("")
         this.damage_x = Math.cos(angle);
         this.damage_y = Math.sin(angle);
         this.damage_speed = damage * 100;
@@ -129,6 +130,17 @@ class Player extends MzsGameObject
 
     update()
     {
+        this.spent_time += this.timedelta / 1000;
+        if(!this.is_me && this.spent_time > 4 && Math.random() < 1 / 300.0) // 希望理论上5秒1发, 所以如果随机数产生是小于1/300, 实际上可能会产生连发, 但是后面会有一段时间不发...所以是期望的
+        {
+            let player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
+            while(player === this)
+                player = this.playground.players[Math.floor(Math.random() * this.playground.players.length)];
+            let tx = player.x + player.speed * this.vx * this.timedelta / 1000 * 0.3;
+            let ty = player.y + player.speed * this.vy * this.timedelta / 1000 * 0.3;
+            this.shoot_fireball(tx, ty);
+        }
+
         if(this.damage_speed > 10) // 失去原先的方向和速度, 被击退的方向和速度替代, 此时速度受到摩擦力影响
         {
             this.vx = this.vy = 0;
@@ -169,7 +181,7 @@ class Player extends MzsGameObject
         this.ctx.fill();
     }
 
-    on_destroy()
+    on_destroy()// 当自己被销毁, 从队列里消除自己
     {
         for(let i = 0; i < this.playground.players.length; i ++)
         {
