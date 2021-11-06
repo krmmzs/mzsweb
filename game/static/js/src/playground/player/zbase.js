@@ -15,7 +15,8 @@ class Player extends MzsGameObject
         this.speed = speed;
         this.is_me = is_me;
         this.eps = 0.1;
-
+        
+        this.cur_skill = null; // 当前选的技能是什么
     }
 
     start()
@@ -37,7 +38,25 @@ class Player extends MzsGameObject
         {
             if(e.which === 3)
             {
-                outer.move_to(e.clientX, e.clientY);
+                outer.move_to(e.clientX, e.clientY); // e.clientX, e.clientY is the coordinates of the mouse click
+            }
+            else if(e.which === 1)
+            {
+                if(outer.cur_skill === "fireball")
+                {
+                    outer.shoot_fireball(e.clientX, e.clientY);
+                }
+
+                outer.cur_skill = null;
+            }
+        });
+        
+        $(window).keydown(function(e)
+        {
+            if(e.which === 81) // q
+            {
+                outer.cur_skill = "fireball";
+                return false;
             }
         });
     }
@@ -48,6 +67,18 @@ class Player extends MzsGameObject
         let angle = Math.atan2(ty - this.y, tx - this.x);
         this.vx = Math.cos(angle);
         this.vy = Math.sin(angle);
+    }
+
+    shoot_fireball(tx, ty)
+    {
+        let x = this.x, y = this.y;
+        let radius = this.playground.height * 0.01;
+        let angle = Math.atan2(ty - this.y, tx - this.x);
+        let vx = Math.cos(angle), vy = Math.sin(angle);
+        let color = "orange";
+        let speed = this.playground.height * 0.5;
+        let move_length = this.playground.height * 1;
+        new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length);
     }
 
     get_dist(x1, y1, x2, y2)
