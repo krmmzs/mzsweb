@@ -24,7 +24,7 @@ class GameMap extends MzsGameObject
 
     render()
     {
-        this.ctx.fillStyle = "rgba(0, 0, 0, 0.1)"; // 第四个参数是可以改变图形覆盖颜色的速度, 这样可以改变球体运动的残影
+        this.ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; // 第四个参数是可以改变图形覆盖颜色的速度, 这样可以改变球体运动的残影
         this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     }
 

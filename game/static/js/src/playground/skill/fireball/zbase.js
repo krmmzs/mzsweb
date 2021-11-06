@@ -1,6 +1,6 @@
 class FireBall extends MzsGameObject
 {
-    constructor(playground, player, x, y, radius, vx, vy, color, speed, move_length)
+    constructor(playground, player, x, y, radius, vx, vy, color, speed, move_length, damage)
     {
         super();
         this.playground = playground;
@@ -14,6 +14,7 @@ class FireBall extends MzsGameObject
         this.color = color;
         this.speed = speed;
         this.move_length = move_length;
+        this.damage = damage;
         this.eps = 0.1;
     }
     
@@ -35,7 +36,32 @@ class FireBall extends MzsGameObject
         this.y += this.vy * moved;
         this.move_length -= moved;
 
+        for(let i = 0; i < this.playground.players.length; i ++) // 判断火球撞击和敌人
+        {
+            let player = this.playground.players[i];
+            if(this.player !== player && this.is_collision(player)) // 如果不是自己, 且碰撞那就触发攻击效果
+            {
+                this.attack(player);
+            }
+
+        }
+
         this.render();
+    }
+
+    is_collision(player)
+    {
+        let distance = this.get_dist(this.x, this.y, player.x, player.y);
+        if(distance < this.radius + player.radius)
+            return true;
+        return false;
+    }
+
+    attack(player)
+    {
+        let angle = Math.atan2(player.y - this.y, player.x - this.x); // 冲击的角度(便于产生击退效果)
+        player.is_attacked(angle, this.damage); // 调用被击中着的被击中产生效果
+        this.destroy(); // 火球击中别人就会被销毁
     }
 
     get_dist(x1, y1, x2, y2)

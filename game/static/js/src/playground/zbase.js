@@ -10,12 +10,12 @@ class MzsGamePlayground
         this.width = this.$playground.width();
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
-        this.palyers = [];
-        this.palyers.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.15, true));
+        this.players = [];
+        this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "white", this.height * 0.15, true));
         
         for(let i = 0; i < 5; i ++)
         {
-            this.palyers.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "blue", this.height * 0.15, false));
+            this.players.push(new Player(this, this.width / 2, this.height / 2, this.height * 0.05, "blue", this.height * 0.15, false));
         }
 
         this.start();
@@ -26,7 +26,6 @@ class MzsGamePlayground
     {
 
     }
-
     update()
     {
 
