@@ -559,6 +559,7 @@ class Settings
         this.root = root;
         this.platform = "WEB"; //js里的字符要与views.setting下的getinfo.py里的字符对应
         if (this.root.acos) this.platform = "ACAPP";
+
         this.start();
     }
 
