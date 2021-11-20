@@ -20,7 +20,7 @@ class MzsGameMenu
     </div>
 </div>
 `);
-        this.$menu.hide(); // try!!!
+        this.$menu.hide();
         this.root.$mzs_game.append(this.$menu);
         this.$single_mode = this.$menu.find('.mzs-game-menu-field-item-single-mode');
         this.$multi_mode = this.$menu.find('.mzs-game-menu-field-item-multi-mode');
@@ -38,7 +38,6 @@ class MzsGameMenu
     {
         let outer = this;
         this.$single_mode.click(function(){
-            //outer.root.playground = new MzsGamePlayground(outer.root);
             outer.hide();
             outer.root.playground.show();
         });
@@ -246,6 +245,12 @@ class Player extends MzsGameObject
         this.spent_time = 0;
         
         this.cur_skill = null; // 当前选的技能是什么
+
+        if(this.is_me)
+        {
+            this.img = new Image();
+            this.img.src = this.playground.root.settings.photo;
+        }
     }
 
     start()
@@ -402,10 +407,23 @@ class Player extends MzsGameObject
 
     render()
     {
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-        this.ctx.fillStyle = this.color;
-        this.ctx.fill();
+        if(this.is_me)
+        {
+            this.ctx.save();
+            this.ctx.beginPath();
+            this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            this.ctx.stroke();
+            this.ctx.clip();
+            this.ctx.drawImage(this.img, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2); 
+            this.ctx.restore();
+        }
+        else
+        {
+            this.ctx.beginPath();
+            this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            this.ctx.fillStyle = this.color;
+            this.ctx.fill();
+        }
     }
 
     on_destroy()// 当自己被销毁, 从队列里消除自己
@@ -560,7 +578,13 @@ class Settings
         this.root = root;
         this.platform = "WEB"; //js里的字符要与views.setting下的getinfo.py里的字符对应
         if (this.root.acos) this.platform = "ACAPP";
-
+        this.username = "";
+        this.photo = "";
+        this.$settings = $(`
+<div class="mzs-game-settings">
+</div>
+`);
+        this.root.$mzs_game.append(this.$settings);
         this.start();
     }
 
@@ -596,6 +620,8 @@ class Settings
                 console.log(resp); // 这里与gitinfo.py里的JsonResponse对应
                 if (resp.result === "success")
                 {
+                    outer.username = resp.username;
+                    outer.photo = resp.photo;
                     outer.hide();
                     outer.root.menu.show();
                 }
@@ -610,10 +636,13 @@ class Settings
 
     hide()
     {
+        this.$settings.hide();
+
     }
 
     show()
     {
+        this.$settings.show();
     }
 
 }

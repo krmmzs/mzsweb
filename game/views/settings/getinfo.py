@@ -5,7 +5,7 @@ def getinfo_acapp(request):
     player = Player.objects.all()[0]
     return JsonResponse({
         'result': "success",
-        'usename': player.user.usename,
+        'username': player.user.username,
         'photo': player.photo,
     })
 
@@ -19,7 +19,7 @@ def getinfo_web(request):
         player = Player.objects.all()[0]
         return JsonResponse({
             'result': "success",
-            'usename': player.user.username:
+            'username': player.user.username,
             'photo': player.photo,
         })
 

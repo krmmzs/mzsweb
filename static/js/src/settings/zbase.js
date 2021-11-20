@@ -5,7 +5,13 @@ class Settings
         this.root = root;
         this.platform = "WEB"; //js里的字符要与views.setting下的getinfo.py里的字符对应
         if (this.root.acos) this.platform = "ACAPP";
-
+        this.username = "";
+        this.photo = "";
+        this.$settings = $(`
+<div class="mzs-game-settings">
+</div>
+`);
+        this.root.$mzs_game.append(this.$settings);
         this.start();
     }
 
@@ -41,6 +47,8 @@ class Settings
                 console.log(resp); // 这里与gitinfo.py里的JsonResponse对应
                 if (resp.result === "success")
                 {
+                    outer.username = resp.username;
+                    outer.photo = resp.photo;
                     outer.hide();
                     outer.root.menu.show();
                 }
@@ -55,10 +63,13 @@ class Settings
 
     hide()
     {
+        this.$settings.hide();
+
     }
 
     show()
     {
+        this.$settings.show();
     }
 
 }
