@@ -659,19 +659,59 @@ class Settings
 
 `);
         this.$login = this.$settings.find(".mzs-game-settings-login");
+        this.$login_username = this.$login.find(".mzs-game-settings-username input");
+        this.$login_password = this.$login.find(".mzs-game-settings-password input");
+        this.$login_submit = this.$login.find(".mzs-game-settings-submit button");
+        this.$login_error_message = this.$login.find(".mzs-game-settings-error-message");
+        this.$login_register = this.$login.find(".mzs-game-settings-option");
+
         this.$login.hide(); // 全部先hide
 
         this.$register = this.$settings.find(".mzs-game-settings-register");
+        this.$register_username = this.$register.find(".mzs-game-settings-username input");
+        this.$register_password = this.$register.find(".mzs-game-settings-password-first input");
+        this.$register_password_confirm = this.$register.find(".mzs-game-settings-password-second input");
+        this.$register_submit = this.$register.find(".mzs-game-settings-submit button");
+        this.$register_error_message = this.$register.find(".mzs-game-settings-error-message");
+        this.$register_login = this.$register.find(".mzs-game-settings-option");
+
         this.$register.hide(); // 全部先hide
 
         this.root.$mzs_game.append(this.$settings);
+
         this.start();
     }
 
     start()
     {
         this.getinfo();
+        this.add_listening_events();
     }
+
+    add_listening_events()
+    {
+        this.add_listening_events_login();
+        this.add_listening_events_register();
+    }
+
+    add_listening_events_login()
+    {
+        let outer = this;
+        
+        this.$login_register.click(function() {
+            outer.register();
+        });
+    }
+
+    add_listening_events_register()
+    {
+        let outer = this;
+
+        this.$register_login.click(function() {
+            outer.login();
+        });
+    }
+
 
     login() // 打开登录界面
     {
@@ -709,8 +749,8 @@ class Settings
                 }
                 else
                 {
-                    //outer.login();
-                    outer.register();
+                    outer.login();
+                    //outer.register();
                 }
             }
 
