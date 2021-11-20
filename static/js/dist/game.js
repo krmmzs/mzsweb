@@ -20,6 +20,7 @@ class MzsGameMenu
     </div>
 </div>
 `);
+        this.$menu.hide(); // try!!!
         this.root.$mzs_game.append(this.$menu);
         this.$single_mode = this.$menu.find('.mzs-game-menu-field-item-single-mode');
         this.$multi_mode = this.$menu.find('.mzs-game-menu-field-item-multi-mode');
@@ -37,7 +38,7 @@ class MzsGameMenu
     {
         let outer = this;
         this.$single_mode.click(function(){
-            outer.root.playground = new MzsGamePlayground(outer.root);
+            //outer.root.playground = new MzsGamePlayground(outer.root);
             outer.hide();
             outer.root.playground.show();
         });
@@ -626,7 +627,7 @@ export class MzsGame
 
         this.settings = new Settings(this);
         this.menu = new MzsGameMenu(this); // creat a menu object
-        //this.playground = new MzsGamePlayground(this);
+        this.playground = new MzsGamePlayground(this);
 
         this.start();
     }

@@ -8,7 +8,7 @@ export class MzsGame
 
         this.settings = new Settings(this);
         this.menu = new MzsGameMenu(this); // creat a menu object
-        //this.playground = new MzsGamePlayground(this);
+        this.playground = new MzsGamePlayground(this);
 
         this.start();
     }
