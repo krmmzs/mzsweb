@@ -655,6 +655,7 @@ class Settings
         </div>
     </div>
 
+
 </div>
 
 `);
@@ -701,6 +702,9 @@ class Settings
         this.$login_register.click(function() {
             outer.register();
         });
+        this.$login_submit.click(function() {
+            outer.login_on_remote();
+        });
     }
 
     add_listening_events_register()
@@ -711,7 +715,35 @@ class Settings
             outer.login();
         });
     }
-
+    
+    login_on_remote()
+    {
+        let outer = this;
+        let username = this.$login_username.val();
+        let password = this.$login_password.val();
+        this.$login_error_message.empty(); // 每次把错误信息清空
+        
+        $.ajax({
+            url: "https://app188.acapp.acwing.com.cn/settings/login/",
+            type: "GET",
+            data:{
+                username: username,
+                password: password,
+            },
+            success: function(resp)
+            {
+                console.log(resp);
+                if (resp.result === "success")
+                {
+                    location.reload();
+                }
+                else
+                {
+                    outer.$login_error_message.html(resp.result);
+                }
+            }
+        });
+    }
 
     login() // 打开登录界面
     {
