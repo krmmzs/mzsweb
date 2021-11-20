@@ -709,7 +709,8 @@ class Settings
                 }
                 else
                 {
-                    outer.login();
+                    //outer.login();
+                    outer.register();
                 }
             }
 
