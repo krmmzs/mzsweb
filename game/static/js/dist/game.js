@@ -15,7 +15,8 @@ class MzsGameMenu
         </div>
         <br>
         <div class="mzs-game-menu-field-item mzs-game-menu-field-item-settings">
-            Settings
+            //Settings
+            Logout(for the moment)
         </div>
     </div>
 </div>
@@ -46,6 +47,7 @@ class MzsGameMenu
         });
         this.$settings.click(function(){
             console.log("click settings");
+            outer.root.settings.logout_on_remote();
         });
     }
     show() // show the current page
@@ -740,6 +742,24 @@ class Settings
                 else
                 {
                     outer.$login_error_message.html(resp.result);
+                }
+            }
+        });
+    }
+
+    logout_on_remote() // 在远程服务器上退出
+    {
+        if(this.platform === "ACAPP") return false;
+
+        $.ajax({
+            url: "https://app188.acapp.acwing.com.cn/settings/logout/",
+            type: "GET",
+            success: function(resp)
+            {
+                console.log(resp);
+                if(resp.result === "success")
+                {
+                    location.reload();
                 }
             }
         });

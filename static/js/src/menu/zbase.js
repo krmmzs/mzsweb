@@ -15,7 +15,8 @@ class MzsGameMenu
         </div>
         <br>
         <div class="mzs-game-menu-field-item mzs-game-menu-field-item-settings">
-            Settings
+            //Settings
+            Logout(for the moment)
         </div>
     </div>
 </div>
@@ -46,6 +47,7 @@ class MzsGameMenu
         });
         this.$settings.click(function(){
             console.log("click settings");
+            outer.root.settings.logout_on_remote();
         });
     }
     show() // show the current page
