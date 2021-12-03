@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'mzsweb.urls'
+ROOT_URLCONF = 'mzsweb.urls' # the most important configuration
 
 TEMPLATES = [
     {
