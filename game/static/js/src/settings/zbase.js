@@ -35,10 +35,10 @@ class Settings
         </div>
         <br>
         <div class="mzs-game-settings-acwing">
-            <img width="30" src="https://app188.acapp.acwing.com.cn/static/image/settings/githublogo.png">
+            <img width="30" src="https://app188.acapp.acwing.com.cn/static/image/settings/acwing_logo.png">
             <br>
             <div>
-                Github一键登录
+                Acwing一键登录
             </div>
         </div>
     </div>
@@ -74,10 +74,10 @@ class Settings
         </div>
         <br>
         <div class="mzs-game-settings-acwing">
-            <img width="30" src="https://app188.acapp.acwing.com.cn/static/image/settings/githublogo.png">
+            <img width="30" src="https://app188.acapp.acwing.com.cn/static/image/settings/acwing_logo.png">
             <br>
             <div>
-                Github一键登录
+            Acwing一键登录
             </div>
         </div>
     </div>
@@ -105,6 +105,8 @@ class Settings
 
         this.$register.hide(); // 全部先hide
 
+        this.$acwing_login = this.$settings.find('.mzs-game-settings-acwing img');
+
         this.root.$mzs_game.append(this.$settings);
 
         this.start();
@@ -118,8 +120,13 @@ class Settings
 
     add_listening_events()
     {
+        let outer = this;
         this.add_listening_events_login();
         this.add_listening_events_register();
+
+        this.$acwing_login.click(function(){
+            outer.acwing_login();
+        })
     }
 
     add_listening_events_login()
@@ -145,6 +152,23 @@ class Settings
         this.$register_submit.click(function() {
             outer.register_on_remote();
         });
+    }
+
+    acwing_login()
+    {
+        $.ajax
+        ({
+            url: "https://app188.acapp.acwing.com.cn/settings/acwing/web/apply_code/",
+            type: "GET",
+            success: function(resp)
+            {
+                if(resp.result === "success")
+                {
+                    window.location.replace(resp.apply_code_url);
+                }
+            }
+        })
+
     }
     
     login_on_remote()
