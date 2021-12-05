@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from game.models.player.player import Player
 
 def getinfo_acapp(request):
-    player = Player.objects.all()[0]
+    player = Player.objects.get(user=user)
     return JsonResponse({
         'result': "success",
         'username': player.user.username,
