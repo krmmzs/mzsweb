@@ -264,7 +264,7 @@ class Settings
 
 
 
-    getinfo()
+    getinfo_web()
     {
         let outer = this;
 
