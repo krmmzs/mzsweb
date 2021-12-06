@@ -34,13 +34,13 @@ class Settings
             注册
         </div>
         <br>
-        <div class="mzs-game-settings-acwing">
+        <!--<div class="mzs-game-settings-acwing">
             <img width="30" src="https://app188.acapp.acwing.com.cn/static/image/settings/acwing_logo.png">
             <br>
             <div>
                 Acwing一键登录
             </div>
-        </div>
+        </div>-->
     </div>
     
     <div class="mzs-game-settings-register">
