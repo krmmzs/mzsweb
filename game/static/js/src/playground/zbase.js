@@ -45,22 +45,31 @@ class MzsGamePlayground
         if(this.game_map) this.game_map.resize();
     }
 
-    show() // open the playground interface
+    show(mode) // open the playground interface
     {
         this.$playground.show();
-
-        this.resize();
 
         this.width = this.$playground.width();
         this.height = this.$playground.height();
         this.game_map = new GameMap(this);
-        this.players = [];
-        this.players.push(new Player(this, this.width / 2 / this.scale, 0.5 , 0.05, "white", 0.15, true));
 
-        for(let i = 0; i < 5; i ++)
+        this.resize();
+
+        this.players = [];
+        this.players.push(new Player(this, this.width / 2 / this.scale, 0.5 , 0.05, "white", 0.15, "me", this.root.settings.username, this.root.settings.photo));
+
+        if(mode === "single mode")
         {
-            this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, this.get_random_color(), 0.15, false));
+            for(let i = 0; i < 5; i ++)
+            {
+                this.players.push(new Player(this, this.width / 2 / this.scale, 0.5, 0.05, this.get_random_color(), 0.15, "robot"));
+            }
         }
+        else if(mode === "multi mode")
+        {
+
+        }
+
     }
 
     hide()
