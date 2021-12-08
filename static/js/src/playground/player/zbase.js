@@ -17,7 +17,7 @@ class Player extends MzsGameObject
         this.color = color;
         this.speed = speed;
         this.is_me = is_me;
-        this.eps = 0.1;
+        this.eps = 0.01;
         this.friction = 0.9; // 击退效果会有个摩擦力的物理状态
         this.spent_time = 0;
         
@@ -39,8 +39,8 @@ class Player extends MzsGameObject
         }
         else
         {
-            let tx = Math.random() * this.playground.width;
-            let ty = Math.random() * this.playground.height;
+            let tx = Math.random() * this.playground.width / this.playground.scale;
+            let ty = Math.random() * this.playground.height / this.playground.scale;
             this.move_to(tx, ty);
         }
     }
@@ -57,13 +57,13 @@ class Player extends MzsGameObject
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if(e.which === 3)
             {
-                outer.move_to(e.clientX - rect.left, e.clientY - rect.top); // e.clientX, e.clientY is the coordinates of the mouse click
+                outer.move_to((e.clientX - rect.left) / outer.playground.scale, (e.clientY - rect.top) / outer.playground.scale); // e.clientX, e.clientY is the coordinates of the mouse click
             }
             else if(e.which === 1)
             {
                 if(outer.cur_skill === "fireball")
                 {
-                    outer.shoot_fireball(e.clientX - rect.left, e.clientY - rect.top);
+                    outer.shoot_fireball((e.clientX - rect.left) / outer.playground.scale, (e.clientY - rect.top) / outer.playground.scale);
                 }
 
                 outer.cur_skill = null;
@@ -91,13 +91,13 @@ class Player extends MzsGameObject
     shoot_fireball(tx, ty)
     {
         let x = this.x, y = this.y;
-        let radius = this.playground.height * 0.01;
+        let radius = 0.01;
         let angle = Math.atan2(ty - this.y, tx - this.x);
         let vx = Math.cos(angle), vy = Math.sin(angle);
         let color = "orange";
-        let speed = this.playground.height * 0.5;
-        let move_length = this.playground.height * 1;
-        new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, this.playground.height * 0.01);
+        let speed = 0.5;
+        let move_length = 1;
+        new FireBall(this.playground, this, x, y, radius, vx, vy, color, speed, move_length, 0.01);
     }
 
     get_dist(x1, y1, x2, y2)
@@ -123,7 +123,7 @@ class Player extends MzsGameObject
         }
 
         this.radius -= damage;
-        if(this.radius < 10)
+        if(this.radius < this.eps)
         {
             this.destroy();
             this.on_destroy();
@@ -138,6 +138,12 @@ class Player extends MzsGameObject
 
     update()
     {
+        this.update_move();
+        this.render();
+    }
+
+    update_move() // update players moving
+    {   
         this.spent_time += this.timedelta / 1000;
         if(!this.is_me && this.spent_time > 4 && Math.random() < 1 / 300.0) // 希望理论上5秒1发, 所以如果随机数产生是小于1/300, 实际上可能会产生连发, 但是后面会有一段时间不发...所以是期望的
         {
@@ -150,7 +156,7 @@ class Player extends MzsGameObject
 
         }
 
-        if(this.damage_speed > 10) // 失去原先的方向和速度, 被击退的方向和速度替代, 此时速度受到摩擦力影响
+        if(this.damage_speed > this.eps) // 失去原先的方向和速度, 被击退的方向和速度替代, 此时速度受到摩擦力影响
         {
             this.vx = this.vy = 0;
             this.move_length = 0;
@@ -166,8 +172,8 @@ class Player extends MzsGameObject
                 this.vx = this.vy = 0;
                 if(!this.is_me)
                 {
-                    let tx = Math.random() * this.playground.width;
-                    let ty = Math.random() * this.playground.height;
+                    let tx = Math.random() * this.playground.width / this.playground.scale;
+                    let ty = Math.random() * this.playground.height / this.playground.scale;
                     this.move_to(tx, ty);
                 }
             }
@@ -179,25 +185,26 @@ class Player extends MzsGameObject
                 this.move_length -= moved;
             }
         }
-        this.render();
     }
 
     render()
     {
+        let scale = this.playground.scale;
+
         if(this.is_me)
         {
             this.ctx.save();
             this.ctx.beginPath();
-            this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
             this.ctx.stroke();
             this.ctx.clip();
-            this.ctx.drawImage(this.img, this.x - this.radius, this.y - this.radius, this.radius * 2, this.radius * 2); 
+            this.ctx.drawImage(this.img, (this.x - this.radius) * scale, (this.y - this.radius) * scale, this.radius * 2 * scale, this.radius * 2 * scale); 
             this.ctx.restore();
         }
         else
         {
             this.ctx.beginPath();
-            this.ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+            this.ctx.arc(this.x * scale, this.y * scale, this.radius * scale, 0, Math.PI * 2, false);
             this.ctx.fillStyle = this.color;
             this.ctx.fill();
         }
