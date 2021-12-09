@@ -67,6 +67,7 @@ class MzsGamePlayground
         }
         else if(mode === "multi mode")
         {
+            this.mps = new MultiPlayerSocket(this);
 
         }
 

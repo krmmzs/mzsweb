@@ -7,13 +7,13 @@ class MultiPlayer(AsyncWebsocketConsumer):
         print('accept')
 
         self.room_name = "room"
-        await self.channel_layer.group_add(self.room_name, self.channel_name)
+        await self.channel_layer.group_add(self.room_name, self.channel_name) # a group api in Django channels which have many function to call
 
-    async def disconnect(self, close_code):
+    async def disconnect(self, close_code): # this function is not necessarily called, so that you'd better not count the number of people
         print('disconnect')
         await self.channel_layer.group_discard(self.room_name, self.channel_name);
 
 
-    async def receive(self, text_data):
+    async def receive(self, text_data): # receive request from front-end
         data = json.loads(text_data)
         print(data)
