@@ -72,8 +72,6 @@ class MzsGameObject
         this.has_called_start = false; // 是否执行过start函数
         this.timedelta = 0; // 当前帧距离上一帧的时间间隔
         this.uuid = this.create_uuid();
-
-        console.log(this.uuid);
     }
 
     create_uuid()
@@ -574,8 +572,10 @@ class MultiPlayerSocket
 
     send_create_player()
     {
+        let outer = this;
         this.ws.send(JSON.stringify({
-            'message': "hello mzsweb server",
+            'event': "create_player",
+            'uuid': outer.uuid,
         }));
     }
 
@@ -655,6 +655,7 @@ class MzsGamePlayground
         else if(mode === "multi mode")
         {
             this.mps = new MultiPlayerSocket(this);
+            this.mps.uuid = this.players[0].uuid; // the players[0] always not robot
 
             this.mps.ws.onopen = function()
             {

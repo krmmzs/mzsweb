@@ -16,8 +16,10 @@ class MultiPlayerSocket
 
     send_create_player()
     {
+        let outer = this;
         this.ws.send(JSON.stringify({
-            'message': "hello mzsweb server",
+            'event': "create_player",
+            'uuid': outer.uuid,
         }));
     }
 

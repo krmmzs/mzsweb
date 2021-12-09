@@ -69,6 +69,7 @@ class MzsGamePlayground
         else if(mode === "multi mode")
         {
             this.mps = new MultiPlayerSocket(this);
+            this.mps.uuid = this.players[0].uuid; // the players[0] always not robot
 
             this.mps.ws.onopen = function()
             {
