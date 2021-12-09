@@ -11,20 +11,31 @@ class MultiPlayerSocket
 
     start()
     {
-
+        this.receive();
     }
 
-    send_create_player()
+    receive()
+    {
+        this.ws.onmessage = function(e)
+        {
+            let data = JSON.parse(e.data);
+            console.log(data);
+        }
+    }
+
+    send_create_player(username, photo)
     {
         let outer = this;
         this.ws.send(JSON.stringify({
             'event': "create_player",
             'uuid': outer.uuid,
+            'username': username,
+            'photo': photo,
         }));
     }
 
     receive_create_player()
     {
-
+        
     }
 }
