@@ -2,6 +2,8 @@ class Player extends MzsGameObject
 {
     constructor(playground, x, y, radius, color, speed, character, username, photo)
     {
+        console.log(character, username, photo);
+
         super();
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
@@ -39,7 +41,7 @@ class Player extends MzsGameObject
             
             this.add_listening_events();
         }
-        else
+        else if (this.character === "me")
         {
             let tx = Math.random() * this.playground.width / this.playground.scale;
             let ty = Math.random() * this.playground.height / this.playground.scale;

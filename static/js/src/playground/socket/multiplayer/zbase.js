@@ -16,10 +16,20 @@ class MultiPlayerSocket
 
     receive()
     {
+        let outer = this;
+
         this.ws.onmessage = function(e)
         {
             let data = JSON.parse(e.data);
-            console.log(data);
+            let uuid = data.uuid;
+            if(uuid === outer.uuid)
+                return false;
+
+            let event = data.event;
+            if(event === "create_player")
+            {
+                outer.receive_create_player(uuid, data.username, data.photo);
+            }
         }
     }
 
@@ -34,8 +44,21 @@ class MultiPlayerSocket
         }));
     }
 
-    receive_create_player()
+    receive_create_player(uuid, username, photo)
     {
-        
+        let player = new Player(
+            this.playground,
+            this.playground.width / 2 / this.playground.scale,
+            0.5,
+            0.05,
+            "white",
+            0.15,
+            "enemy",
+            username,
+            photo,
+        );
+
+        player.uuid = uuid;
+        this.playground.player.push(player);
     }
 }
