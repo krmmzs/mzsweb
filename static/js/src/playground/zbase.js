@@ -47,6 +47,7 @@ class MzsGamePlayground
 
     show(mode) // open the playground interface
     {
+        let outer = this;
         this.$playground.show();
 
         this.width = this.$playground.width();
@@ -69,6 +70,10 @@ class MzsGamePlayground
         {
             this.mps = new MultiPlayerSocket(this);
 
+            this.mps.ws.onopen = function()
+            {
+                outer.mps.send_create_player();
+            }
         }
 
     }

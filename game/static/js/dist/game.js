@@ -556,6 +556,18 @@ class MultiPlayerSocket
     {
 
     }
+
+    send_create_player()
+    {
+        this.ws.send(JSON.stringify({
+            'message': "hello mzsweb server",
+        }));
+    }
+
+    receive_create_player()
+    {
+
+    }
 }
 class MzsGamePlayground
 {
@@ -606,6 +618,7 @@ class MzsGamePlayground
 
     show(mode) // open the playground interface
     {
+        let outer = this;
         this.$playground.show();
 
         this.width = this.$playground.width();
@@ -628,6 +641,10 @@ class MzsGamePlayground
         {
             this.mps = new MultiPlayerSocket(this);
 
+            this.mps.ws.onopen = function()
+            {
+                outer.mps.send_create_player();
+            }
         }
 
     }

@@ -13,4 +13,16 @@ class MultiPlayerSocket
     {
 
     }
+
+    send_create_player()
+    {
+        this.ws.send(JSON.stringify({
+            'message': "hello mzsweb server",
+        }));
+    }
+
+    receive_create_player()
+    {
+
+    }
 }
