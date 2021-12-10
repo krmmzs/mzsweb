@@ -15,8 +15,7 @@ class MzsGameMenu
         </div>
         <br>
         <div class="mzs-game-menu-field-item mzs-game-menu-field-item-settings">
-            //Settings
-            Logout(for the moment)
+            Logout
         </div>
     </div>
 </div>
@@ -777,13 +776,13 @@ class Settings
             登录
         </div>
         <br>
-        <div class="mzs-game-settings-acwing">
+        <!--<div class="mzs-game-settings-acwing">
             <img width="30" src="https://app188.acapp.acwing.com.cn/static/image/settings/acwing_logo.png">
             <br>
             <div>
             Acwing一键登录
             </div>
-        </div>
+        </div>-->
     </div>
 
 
@@ -943,19 +942,24 @@ class Settings
 
     logout_on_remote() // 在远程服务器上退出
     {
-        if(this.platform === "ACAPP") return false;
-
-        $.ajax({
-            url: "https://app188.acapp.acwing.com.cn/settings/logout/",
-            type: "GET",
-            success: function(resp)
-            {
-                if(resp.result === "success")
+        if(this.platform === "ACAPP")
+        {
+            this.root.acos.api.window.close();
+        }
+        else
+        {
+            $.ajax({
+                url: "https://app188.acapp.acwing.com.cn/settings/logout/",
+                type: "GET",
+                success: function(resp)
                 {
-                    location.reload();
+                    if(resp.result === "success")
+                    {
+                        location.reload();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     login() // 打开登录界面

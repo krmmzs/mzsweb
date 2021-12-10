@@ -15,8 +15,7 @@ class MzsGameMenu
         </div>
         <br>
         <div class="mzs-game-menu-field-item mzs-game-menu-field-item-settings">
-            //Settings
-            Logout(for the moment)
+            Logout
         </div>
     </div>
 </div>
