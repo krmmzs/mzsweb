@@ -44,22 +44,37 @@ class MultiPlayer(AsyncWebsocketConsumer):
         })
         cache.set(self.room_name, players, 3600) # validity is 1 hour
         await self.channel_layer.group_send( # mass texting
-                self.room_name,
-                {
-                    'type': "group_create_player", # meaning to send to everyone in the group
-                    'event': "create_player",
-                    'uuid': data['uuid'],
-                    'username': data['username'],
-                    'photo': data['photo'],
-                }
+            self.room_name,
+            {
+                'type': "group_send_event", # meaning to send to everyone in the group
+                'event': "create_player",
+                'uuid': data['uuid'],
+                'username': data['username'],
+                'photo': data['photo'],
+            }
         )
 
-    async def group_create_player(self, data):
+    async def group_send_event(self, data):
         await self.send(text_data = json.dumps(data))
+
+    async def move_to(self, data):
+        await self.channel_layer.group_send(
+            self.room_name,
+            {
+                'type': "group_send_event",
+                'event': "move_to",
+                'uuid': data['uuid'],
+                'tx': data['tx'],
+                'ty': data['ty'],
+            }
+
+        )
 
     async def receive(self, text_data): # receive request from front-end
         data = json.loads(text_data) # json to dict
         event = data['event']
         if event == "create_player":
             await self.create_player(data)
+        elif  event == "move_to":
+            await self.move_to(data)
 
