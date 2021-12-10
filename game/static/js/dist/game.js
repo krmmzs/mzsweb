@@ -249,8 +249,6 @@ class Player extends MzsGameObject
 {
     constructor(playground, x, y, radius, color, speed, character, username, photo)
     {
-        console.log(character, username, photo);
-
         super();
         this.playground = playground;
         this.ctx = this.playground.game_map.ctx;
@@ -617,7 +615,7 @@ class MultiPlayerSocket
         );
 
         player.uuid = uuid;
-        this.playground.player.push(player);
+        this.playground.players.push(player);
     }
 }
 class MzsGamePlayground
@@ -655,8 +653,6 @@ class MzsGamePlayground
 
     resize()
     {
-        console.log("resize");
-
         this.width = this.$playground.width();
         this.height = this.$playground.height();
         let unit = Math.min(this.width / 16, this.height / 9);
@@ -902,7 +898,6 @@ class Settings
             },
             success: function(resp)
             {
-                console.log(resp);
                 if (resp.result === "success")
                 {
                     location.reload();
@@ -933,7 +928,6 @@ class Settings
             },
             success: function(resp)
             {
-                console.log(resp);
                 if(resp.result === "success")
                 {
                     location.reload();
@@ -956,7 +950,6 @@ class Settings
             type: "GET",
             success: function(resp)
             {
-                console.log(resp);
                 if(resp.result === "success")
                 {
                     location.reload();
@@ -981,7 +974,6 @@ class Settings
     {
         let outer = this;
         this.root.acos.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp) {
-            console.log(resp);
             if(resp.result === "success")
             {
                 outer.username = resp.username;
@@ -1021,7 +1013,6 @@ class Settings
             },
             success: function(resp)
             {
-                console.log(resp); // 这里与gitinfo.py里的JsonResponse对应
                 if (resp.result === "success")
                 {
                     outer.username = resp.username;

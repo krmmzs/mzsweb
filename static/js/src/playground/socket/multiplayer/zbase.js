@@ -59,6 +59,6 @@ class MultiPlayerSocket
         );
 
         player.uuid = uuid;
-        this.playground.player.push(player);
+        this.playground.players.push(player);
     }
 }

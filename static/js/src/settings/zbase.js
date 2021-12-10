@@ -194,7 +194,6 @@ class Settings
             },
             success: function(resp)
             {
-                console.log(resp);
                 if (resp.result === "success")
                 {
                     location.reload();
@@ -225,7 +224,6 @@ class Settings
             },
             success: function(resp)
             {
-                console.log(resp);
                 if(resp.result === "success")
                 {
                     location.reload();
@@ -248,7 +246,6 @@ class Settings
             type: "GET",
             success: function(resp)
             {
-                console.log(resp);
                 if(resp.result === "success")
                 {
                     location.reload();
@@ -273,7 +270,6 @@ class Settings
     {
         let outer = this;
         this.root.acos.api.oauth2.authorize(appid, redirect_uri, scope, state, function(resp) {
-            console.log(resp);
             if(resp.result === "success")
             {
                 outer.username = resp.username;
@@ -313,7 +309,6 @@ class Settings
             },
             success: function(resp)
             {
-                console.log(resp); // 这里与gitinfo.py里的JsonResponse对应
                 if (resp.result === "success")
                 {
                     outer.username = resp.username;
