@@ -32,8 +32,11 @@ class FireBall extends MzsGameObject
         }
 
         this.update_move();
-        this.update_attack();
 
+        if(this.player.character !== "enemy") //  only judge in player's client
+        {
+            this.update_attack();
+        }
         this.render();
     }
 
@@ -58,7 +61,7 @@ class FireBall extends MzsGameObject
         }
     }
 
-    is_collision(player)
+    is_collision(player) // judge the impact
     {
         let distance = this.get_dist(this.x, this.y, player.x, player.y);
         if(distance < this.radius + player.radius)

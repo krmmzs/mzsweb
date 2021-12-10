@@ -5,6 +5,13 @@ from django.core.cache import cache
 
 class MultiPlayer(AsyncWebsocketConsumer):
     async def connect(self):
+        await self.accept()
+
+    async def disconnect(self, close_code): # this function is not necessarily called, so that you'd better not count the number of people
+        print('disconnect')
+        await self.channel_layer.group_discard(self.room_name, self.channel_name)
+
+    async def create_player(self, data):
         self.room_name = None
 
         for i in range(1000):
@@ -15,8 +22,6 @@ class MultiPlayer(AsyncWebsocketConsumer):
 
         if not self.room_name:
             return
-
-        await self.accept()
 
         if not cache.has_key(self.room_name):
             cache.set(self.room_name, [], 3600) # validity is 1 hour
@@ -31,11 +36,6 @@ class MultiPlayer(AsyncWebsocketConsumer):
 
         await self.channel_layer.group_add(self.room_name, self.channel_name) # a group api in Django channels which have many function to call
 
-    async def disconnect(self, close_code): # this function is not necessarily called, so that you'd better not count the number of people
-        print('disconnect')
-        await self.channel_layer.group_discard(self.room_name, self.channel_name)
-
-    async def create_player(self, data):
         players = cache.get(self.room_name)
         players.append({
             'uuid': data['uuid'],
