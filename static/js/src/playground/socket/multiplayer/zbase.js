@@ -34,6 +34,10 @@ class MultiPlayerSocket
             {
                 outer.receive_move_to(uuid, data.tx, data.ty);
             }
+            else if(event === "shoot_fireball")
+            {
+                outer.receive_shoot_fireball(uuid, data.tx, data.ty, data.ball_uuid);
+            }
         };
     }
 
@@ -101,4 +105,25 @@ class MultiPlayerSocket
         }
     }
 
+    send_shoot_fireball(tx, ty, ball_uuid)
+    {
+        let outer = this;
+        this.ws.send(JSON.stringify({
+            'event': "shoot_fireball",
+            'uuid': outer.uuid,
+            'tx': tx,
+            'ty': ty,
+            'ball_uuid': ball_uuid,
+        }));
+    }
+
+    receive_shoot_fireball(uuid, tx, ty, ball_uuid)
+    {
+        let player = this.get_player(uuid);
+        if(player)
+        {
+            let fireball = player.shoot_fireball(tx, ty);
+            fireball.uuid = ball_uuid;
+        }
+    }
 }

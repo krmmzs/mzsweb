@@ -31,22 +31,31 @@ class FireBall extends MzsGameObject
             return false;
         }
 
+        this.update_move();
+        this.update_attack();
+
+        this.render();
+    }
+
+    update_move()
+    {
         let moved = Math.min(this.move_length, this.speed * this.timedelta / 1000);
         this.x += this.vx * moved;
         this.y += this.vy * moved;
         this.move_length -= moved;
+    }
 
+    update_attack()
+    {
         for(let i = 0; i < this.playground.players.length; i ++) // 判断火球撞击和敌人
         {
             let player = this.playground.players[i];
             if(this.player !== player && this.is_collision(player)) // 如果不是自己, 且碰撞那就触发攻击效果
             {
                 this.attack(player);
+                break;
             }
-
         }
-
-        this.render();
     }
 
     is_collision(player)
@@ -80,4 +89,16 @@ class FireBall extends MzsGameObject
         this.ctx.fill();
     }
 
+    on_destroy()
+    {
+        let fireballs = this.player.fireballs;
+        for(let i = 0; i < fireballs.length; i ++)
+        {
+            if(fireballs[i] === this)
+            {
+                fireballs.splice(i, 1);
+                break;
+            }
+        }
+    }
 }
