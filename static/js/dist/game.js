@@ -414,6 +414,14 @@ class Player extends MzsGameObject
         this.speed *= 0.8;
     }
 
+    receive_attack(x, y, angle, damage, ball_uuid, attacker)
+    {
+        attacker.destroy_fireball(ball_uuid);
+        this.x = x;
+        this.y = y;
+        this.is_attacked(angle, damage);
+    }
+
 
     update()
     {
@@ -577,6 +585,12 @@ class FireBall extends MzsGameObject
     {
         let angle = Math.atan2(player.y - this.y, player.x - this.x); // 冲击的角度(便于产生击退效果)
         player.is_attacked(angle, this.damage); // 调用被击中着的被击中产生效果
+
+        if(this.playground.mode === "multi mode")
+        {
+            this.playground.mps.send_attack(player.uuid, player.x, player.y, angle, this.damage, this.uuid);
+        }
+
         this.destroy(); // 火球击中别人就会被销毁
     }
 
@@ -648,6 +662,10 @@ class MultiPlayerSocket
             else if(event === "shoot_fireball")
             {
                 outer.receive_shoot_fireball(uuid, data.tx, data.ty, data.ball_uuid);
+            }
+            else if(event === "attack")
+            {
+                outer.receive_attack(uuid, data.attackee_uuid, data.x, data.y, data.angle, data.damage, data.ball_uuid);
             }
         };
     }
@@ -737,6 +755,34 @@ class MultiPlayerSocket
             fireball.uuid = ball_uuid;
         }
     }
+
+    send_attack(attackee_uuid, x, y, angle, damage, ball_uuid)
+    {
+        let outer = this;
+        this.ws.send(JSON.stringify({
+            'event': "attack",
+            'uuid': outer.uuid,
+            'attackee_uuid': attackee_uuid,
+            'x': x,
+            'y': y,
+            'angle': angle,
+            'damage': damage,
+            'ball_uuid': ball_uuid,
+        }));
+    }
+
+    receive_attack(uuid, attackee_uuid, x, y, angle, damage, ball_uuid)
+    {
+        let attacker = this.get_player(uuid);
+        let attackee = this.get_player(attackee_uuid);
+        if(attacker && attackee)
+        {
+            attackee.receive_attack(x, y, angle, damage, ball_uuid, attacker);
+        }
+
+    }
+
+
 }
 class MzsGamePlayground
 {

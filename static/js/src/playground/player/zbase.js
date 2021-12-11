@@ -168,6 +168,14 @@ class Player extends MzsGameObject
         this.speed *= 0.8;
     }
 
+    receive_attack(x, y, angle, damage, ball_uuid, attacker)
+    {
+        attacker.destroy_fireball(ball_uuid);
+        this.x = x;
+        this.y = y;
+        this.is_attacked(angle, damage);
+    }
+
 
     update()
     {

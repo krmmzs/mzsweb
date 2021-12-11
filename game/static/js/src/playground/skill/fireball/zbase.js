@@ -73,6 +73,12 @@ class FireBall extends MzsGameObject
     {
         let angle = Math.atan2(player.y - this.y, player.x - this.x); // 冲击的角度(便于产生击退效果)
         player.is_attacked(angle, this.damage); // 调用被击中着的被击中产生效果
+
+        if(this.playground.mode === "multi mode")
+        {
+            this.playground.mps.send_attack(player.uuid, player.x, player.y, angle, this.damage, this.uuid);
+        }
+
         this.destroy(); // 火球击中别人就会被销毁
     }
 
