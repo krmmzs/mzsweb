@@ -386,6 +386,11 @@ class Player extends MzsGameObject
 
     on_destroy()// 当自己被销毁, 从队列里消除自己
     {
+        if(this.character === "me")
+        {
+            this.playground.state = "over";
+        }
+
         for(let i = 0; i < this.playground.players.length; i ++)
         {
             if(this.playground.players[i] === this)
