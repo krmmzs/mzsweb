@@ -397,6 +397,11 @@ class Player extends MzsGameObject
                         return false;
 
                     outer.blink(tx, ty);
+
+                    if(outer.playground.mode === "multi mode")
+                    {
+                        outer.playground.mps.send_blink(tx, ty);
+                    }
                 }
 
                 outer.cur_skill = null;
@@ -839,6 +844,10 @@ class MultiPlayerSocket
             {
                 outer.receive_attack(uuid, data.attackee_uuid, data.x, data.y, data.angle, data.damage, data.ball_uuid);
             }
+            else if(event === "blink")
+            {
+                outer.receive_blink(uuid, data.tx, data.ty);
+            }
         };
     }
 
@@ -954,7 +963,25 @@ class MultiPlayerSocket
 
     }
 
+    send_blink(tx, ty)
+    {
+        let outer = this;
+        this.ws.send(JSON.stringify({
+            'event': "blink",
+            'uuid': outer.uuid,
+            'tx': tx,
+            'ty': ty,
+        }));
+    }
 
+    receive_blink(uuid, tx, ty)
+    {
+        let player = this.get_player(uuid);
+        if(player)
+        {
+            player.blink(tx, ty);
+        }
+    }
 }
 class MzsGamePlayground
 {

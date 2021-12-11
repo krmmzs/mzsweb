@@ -117,6 +117,11 @@ class Player extends MzsGameObject
                         return false;
 
                     outer.blink(tx, ty);
+
+                    if(outer.playground.mode === "multi mode")
+                    {
+                        outer.playground.mps.send_blink(tx, ty);
+                    }
                 }
 
                 outer.cur_skill = null;
