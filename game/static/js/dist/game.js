@@ -161,7 +161,7 @@ class GameMap extends MzsGameObject
     {
         super();
         this.playground = playground;
-        this.$canvas = $(`<canvas></canvas>`);
+        this.$canvas = $(`<canvas tabindex=0></canvas>`); // tabindex=0 let canvas Monitor keyboard
         this.ctx = this.$canvas[0].getContext('2d');
         this.ctx.canvas.width = this.playground.width;
         this.ctx.canvas.height = this.playground.height;
@@ -170,7 +170,7 @@ class GameMap extends MzsGameObject
 
     start()
     {
-        
+        this.$canvas.focus();
     }
 
     resize()
@@ -408,7 +408,7 @@ class Player extends MzsGameObject
             }
         });
         
-        $(window).keydown(function(e)
+        this.playground.game_map.$canvas.keydown(function(e)
         {
             if(outer.playground.state !== "fighting")
                 return true;
