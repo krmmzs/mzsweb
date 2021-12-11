@@ -71,6 +71,7 @@ class MzsGamePlayground
         }
         else if(mode === "multi mode")
         {
+            this.chat_field = new ChatField(this); // chat field build
             this.mps = new MultiPlayerSocket(this);
             this.mps.uuid = this.players[0].uuid; // the players[0] always not robot
 

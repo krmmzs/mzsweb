@@ -155,6 +155,100 @@ requestAnimationFrame(MZS_GAME_ANIMATTON); // 这个参数作为时间戳传给�
 
 
 
+class ChatField
+{
+    constructor(playground)
+    {
+        this.playground = playground;
+
+        this.$history = $(`<div class="mzs-game-chat-field-history">History</div>`);
+        this.$input = $(`<input type="text" class="mzs-game-chat-field-input">`);
+
+        this.$history.hide();
+        this.$input.hide();
+
+        this.func_id = null; // record the history show id(oop)
+
+        this.playground.$playground.append(this.$history);
+        this.playground.$playground.append(this.$input);
+
+        this.start();
+    }
+
+    start()
+    {
+        this.add_listening_events();
+    }
+
+    add_listening_events()
+    {
+        let outer = this;
+
+        this.$input.keydown(function(e)
+        {
+            if (e.which === 27) // esc
+            {
+                outer.hide_input();
+                return false;
+            }
+            else if (e.which === 13) // enter
+            {
+                let username = outer.playground.root.settings.username;
+                let text = outer.$input.val(); // get the $input value
+                if (text)
+                {
+                    outer.$input.val("");
+                    outer.add_message(username, text);
+                    outer.playground.mps.send_message(username, text); // send the message from you client to server 
+                }
+                return false;
+            }
+        });
+    }
+
+    render_message(message) // encapsulate a html to show message
+    {
+        return $(`<div>${message}</div>`);
+    }
+
+    add_message(username, text)
+    {
+        this.show_history();
+        let message = `[${username}]${text}`;
+        this.$history.append(this.render_message(message));
+        this.$history.scrollTop(this.$history[0].scrollHeight); // api to scroll to the bottom, showing the latest message
+    }
+
+    show_history()
+    {
+        let outer = this;
+        this.$history.fadeIn(); // jQurey's api to show gradually
+
+        if (this.func_id) clearTimeout(this.func_id); // the api could close the old history command
+
+        this.func_id = setTimeout(function() // settimeout to close history, the function will return a id(oop)
+            {
+                outer.$history.fadeOut(); // out gradually
+                outer.func_id = null;
+            }, 3000
+        );
+    }
+
+    show_input()
+    {
+        this.show_history(); // when input, the history need to be showed
+
+        this.$input.show();
+        this.$input.focus();
+    }
+
+    hide_input()
+    {
+        this.$input.hide();
+        this.playground.game_map.$canvas.focus();
+    }
+}
+
 class GameMap extends MzsGameObject
 {
     constructor(playground)
@@ -303,7 +397,7 @@ class Player extends MzsGameObject
         this.friction = 0.9; // 击退效果会有个摩擦力的物理状态
         this.spent_time = 0;
         this.fireballs = [];
-        
+
         this.cur_skill = null; // 当前选的技能是什么
 
         if(this.character !== "robot")
@@ -337,7 +431,6 @@ class Player extends MzsGameObject
 
         if(this.character === "me")
         {
-            
             this.add_listening_events();
         }
         else if (this.character === "me")
@@ -358,7 +451,7 @@ class Player extends MzsGameObject
         this.playground.game_map.$canvas.mousedown(function(e)
         {
             if(outer.playground.state !== "fighting")
-                return false;
+                return true;
 
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if(e.which === 3)
@@ -407,9 +500,25 @@ class Player extends MzsGameObject
                 outer.cur_skill = null;
             }
         });
-        
+
         this.playground.game_map.$canvas.keydown(function(e)
         {
+            if(e.which === 13) // enter
+            {
+                if(outer.playground.mode === "multi mode") // open chat_filed
+                {
+                    outer.playground.chat_field.show_input();
+                    return false;
+                }
+            }
+            else if(e.which === 27) // esc
+            {
+                if(outer.playground.mode === "multi mode") // close chat_filed
+                {
+                    outer.playground.chat_field.hide_input();
+                }
+            }
+
             if(outer.playground.state !== "fighting")
                 return true;
 
@@ -475,7 +584,7 @@ class Player extends MzsGameObject
     blink(tx, ty)
     {
         let d = this.get_dist(this.x, this.y, tx, ty);
-        d = Math.min(d, 0.8);
+        d = Math.min(d, 0.4);
         let angle = Math.atan2(ty - this.y, tx - this.x);
         this.x += d * Math.cos(angle);
         this.y += d * Math.sin(angle);
@@ -848,6 +957,10 @@ class MultiPlayerSocket
             {
                 outer.receive_blink(uuid, data.tx, data.ty);
             }
+            else if(event === "message")
+            {
+                outer.receive_message(uuid, data.username, data.text);
+            }
         };
     }
 
@@ -982,6 +1095,22 @@ class MultiPlayerSocket
             player.blink(tx, ty);
         }
     }
+
+    send_message(username, text)
+    {
+        let outer = this;
+        this.ws.send(JSON.stringify({
+            'event': "message",
+            'uuid': outer.uuid,
+            'username': username,
+            'text': text,
+        }));
+    }
+
+    receive_message(uuid, username, text)
+    {
+        this.playground.chat_field.add_message(username, text);
+    }
 }
 class MzsGamePlayground
 {
@@ -1056,6 +1185,7 @@ class MzsGamePlayground
         }
         else if(mode === "multi mode")
         {
+            this.chat_field = new ChatField(this); // chat field build
             this.mps = new MultiPlayerSocket(this);
             this.mps.uuid = this.players[0].uuid; // the players[0] always not robot
 

@@ -23,7 +23,7 @@ class Player extends MzsGameObject
         this.friction = 0.9; // 击退效果会有个摩擦力的物理状态
         this.spent_time = 0;
         this.fireballs = [];
-        
+
         this.cur_skill = null; // 当前选的技能是什么
 
         if(this.character !== "robot")
@@ -57,7 +57,6 @@ class Player extends MzsGameObject
 
         if(this.character === "me")
         {
-            
             this.add_listening_events();
         }
         else if (this.character === "me")
@@ -78,7 +77,7 @@ class Player extends MzsGameObject
         this.playground.game_map.$canvas.mousedown(function(e)
         {
             if(outer.playground.state !== "fighting")
-                return false;
+                return true;
 
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if(e.which === 3)
@@ -127,9 +126,25 @@ class Player extends MzsGameObject
                 outer.cur_skill = null;
             }
         });
-        
+
         this.playground.game_map.$canvas.keydown(function(e)
         {
+            if(e.which === 13) // enter
+            {
+                if(outer.playground.mode === "multi mode") // open chat_filed
+                {
+                    outer.playground.chat_field.show_input();
+                    return false;
+                }
+            }
+            else if(e.which === 27) // esc
+            {
+                if(outer.playground.mode === "multi mode") // close chat_filed
+                {
+                    outer.playground.chat_field.hide_input();
+                }
+            }
+
             if(outer.playground.state !== "fighting")
                 return true;
 
@@ -195,7 +210,7 @@ class Player extends MzsGameObject
     blink(tx, ty)
     {
         let d = this.get_dist(this.x, this.y, tx, ty);
-        d = Math.min(d, 0.8);
+        d = Math.min(d, 0.4);
         let angle = Math.atan2(ty - this.y, tx - this.x);
         this.x += d * Math.cos(angle);
         this.y += d * Math.sin(angle);
