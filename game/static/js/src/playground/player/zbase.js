@@ -73,7 +73,7 @@ class Player extends MzsGameObject
         let outer = this;
         this.playground.game_map.$canvas.on("contextmenu", function()
         {
-            return true;
+            return false;
         });
         this.playground.game_map.$canvas.mousedown(function(e)
         {
