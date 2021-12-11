@@ -31,5 +31,4 @@ class NoticeBoard extends MzsGameObject
         this.ctx.textAlign = "center";
         this.ctx.fillText(this.text, this.playground.width / 2, 20);
     }
-
 }
