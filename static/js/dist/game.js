@@ -317,6 +317,10 @@ class Player extends MzsGameObject
             this.fireball_coldtime = 3; // unit is second
             this.fireball_img = new Image();
             this.fireball_img.src = "https://cdn.acwing.com/media/article/image/2021/12/02/1_9340c86053-fireball.png";
+
+            this.blink_coldtime = 6; // unit is second
+            this.blink_img = new Image();
+            this.blink_img.src = "https://cdn.acwing.com/media/article/image/2021/12/02/1_daccabdc53-blink.png";
         }
     }
 
@@ -349,7 +353,7 @@ class Player extends MzsGameObject
         let outer = this;
         this.playground.game_map.$canvas.on("contextmenu", function()
         {
-            return false;
+            return true;
         });
         this.playground.game_map.$canvas.mousedown(function(e)
         {
@@ -370,21 +374,29 @@ class Player extends MzsGameObject
             }
             else if(e.which === 1)
             {
-                if(outer.fireball_coldtime > outer.eps)
-                {
-                    return false;
-                }
 
                 let tx = (e.clientX - rect.left) / outer.playground.scale;
                 let ty = (e.clientY - rect.top) / outer.playground.scale;
                 if(outer.cur_skill === "fireball")
                 {
+                    if(outer.fireball_coldtime > outer.eps)
+                    {
+                         return false;
+                    }
+
                     let fireball = outer.shoot_fireball(tx, ty);
 
                     if(outer.playground.mode === "multi mode")
                     {
                         outer.playground.mps.send_shoot_fireball(tx, ty, fireball.uuid);
                     }
+                }
+                else if(outer.cur_skill === "blink")
+                {
+                    if(outer.blink_coldtime > outer.eps)
+                        return false;
+
+                    outer.blink(tx, ty);
                 }
 
                 outer.cur_skill = null;
@@ -394,16 +406,24 @@ class Player extends MzsGameObject
         $(window).keydown(function(e)
         {
             if(outer.playground.state !== "fighting")
-                return false;
-
-            if(outer.fireball_coldtime > outer.eps)
-            {
-                return false;
-            }
+                return true;
 
             if(e.which === 81) // q
             {
+                if(outer.fireball_coldtime > outer.eps)
+                {
+                    return true;
+                }
                 outer.cur_skill = "fireball";
+                return false;
+            }
+            if(e.which === 70)
+            {
+                if(outer.blink_coldtime > outer.eps)
+                {
+                    return true;
+                }
+                outer.cur_skill = "blink";
                 return false;
             }
         });
@@ -445,6 +465,18 @@ class Player extends MzsGameObject
                 break;
             }
         }
+    }
+
+    blink(tx, ty)
+    {
+        let d = this.get_dist(this.x, this.y, tx, ty);
+        d = Math.min(d, 0.8);
+        let angle = Math.atan2(ty - this.y, tx - this.x);
+        this.x += d * Math.cos(angle);
+        this.y += d * Math.sin(angle);
+
+        this.blink_coldtime = 6; // reset coldtime
+        this.move_length = 0; // after blink stop
     }
 
     get_dist(x1, y1, x2, y2)
@@ -509,6 +541,9 @@ class Player extends MzsGameObject
     {
         this.fireball_coldtime -= this.timedelta / 1000;
         this.fireball_coldtime = Math.max(this.fireball_coldtime, 0);
+
+        this.blink_coldtime -= this.timedelta / 1000;
+        this.blink_coldtime = Math.max(this.blink_coldtime, 0);
     }
 
 
@@ -604,6 +639,25 @@ class Player extends MzsGameObject
             this.ctx.beginPath();
             this.ctx.moveTo(x * scale, y * scale);
             this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI / 2, Math.PI * 2 * (1 - this.fireball_coldtime / 3) - Math.PI / 2, true);
+            this.ctx.lineTo(x * scale, y * scale);
+            this.ctx.fillStyle = "rgba(0, 0, 255, 0.6)";
+            this.ctx.fill();
+        }
+
+        x = 1.62, y = 0.9, r = 0.04;
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.arc(x * scale, y * scale, r * scale, 0, Math.PI * 2, false);
+        this.ctx.stroke();
+        this.ctx.clip();
+        this.ctx.drawImage(this.blink_img, (x - r) * scale, (y - r) * scale, r * 2 * scale, r * 2 * scale);
+        this.ctx.restore();
+
+        if(this.blink_coldtime > 0)
+        {
+            this.ctx.beginPath();
+            this.ctx.moveTo(x * scale, y * scale);
+            this.ctx.arc(x * scale, y * scale, r * scale, 0 - Math.PI / 2, Math.PI * 2 * (1 - this.blink_coldtime / 6) - Math.PI / 2, true);
             this.ctx.lineTo(x * scale, y * scale);
             this.ctx.fillStyle = "rgba(0, 0, 255, 0.6)";
             this.ctx.fill();
