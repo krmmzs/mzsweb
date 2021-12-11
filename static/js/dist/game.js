@@ -195,6 +195,41 @@ class GameMap extends MzsGameObject
 
 
 }
+class NoticeBoard extends MzsGameObject
+{
+    constructor(playground)
+    {
+        super();
+
+        this.playground = playground;
+        this.ctx = this.playground.game_map.ctx;
+        this.text = "Ready: 0";
+    }
+
+    start()
+    {
+    }
+
+    write(text)
+    {
+        this.text = text;
+
+    }
+
+    update()
+    {
+        this.render();
+    }
+
+    render()
+    {
+        this.ctx.font = "20px serif";
+        this.ctx.fillStyle = "white";
+        this.ctx.textAlign = "center";
+        this.ctx.fillText(this.text, this.playground.width / 2, 20);
+    }
+
+}
 class Particle extends MzsGameObject
 {
     constructor(playground, x, y, radius, vx, vy, color, speed, move_length)
@@ -281,6 +316,15 @@ class Player extends MzsGameObject
 
     start()
     {
+        this.playground.player_count ++;
+        this.playground.notice_board.write("Ready: " + this.playground.player_count);
+
+        if(this.playground.player_count >= 3)
+        {
+            this.playground.state = "fighting";
+            this.playground.notice_board.write("Fighting");
+        }
+
         if(this.character === "me")
         {
             
@@ -303,6 +347,9 @@ class Player extends MzsGameObject
         });
         this.playground.game_map.$canvas.mousedown(function(e)
         {
+            if(outer.playground.state !== "fighting")
+                return false;
+
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if(e.which === 3)
             {
@@ -335,6 +382,9 @@ class Player extends MzsGameObject
         
         $(window).keydown(function(e)
         {
+            if(outer.playground.state !== "fighting")
+                return false;
+
             if(e.which === 81) // q
             {
                 outer.cur_skill = "fireball";
@@ -839,6 +889,9 @@ class MzsGamePlayground
         this.game_map = new GameMap(this);
 
         this.mode = mode;
+        this.state = "waiting"; // waiting -> fighting -> over // state machine
+        this.notice_board = new NoticeBoard(this);
+        this.player_count = 0;
 
         this.resize();
 

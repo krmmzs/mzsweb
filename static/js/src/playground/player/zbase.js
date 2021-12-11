@@ -35,6 +35,15 @@ class Player extends MzsGameObject
 
     start()
     {
+        this.playground.player_count ++;
+        this.playground.notice_board.write("Ready: " + this.playground.player_count);
+
+        if(this.playground.player_count >= 3)
+        {
+            this.playground.state = "fighting";
+            this.playground.notice_board.write("Fighting");
+        }
+
         if(this.character === "me")
         {
             
@@ -57,6 +66,9 @@ class Player extends MzsGameObject
         });
         this.playground.game_map.$canvas.mousedown(function(e)
         {
+            if(outer.playground.state !== "fighting")
+                return false;
+
             const rect = outer.ctx.canvas.getBoundingClientRect();
             if(e.which === 3)
             {
@@ -89,6 +101,9 @@ class Player extends MzsGameObject
         
         $(window).keydown(function(e)
         {
+            if(outer.playground.state !== "fighting")
+                return false;
+
             if(e.which === 81) // q
             {
                 outer.cur_skill = "fireball";

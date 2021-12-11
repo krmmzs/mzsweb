@@ -53,6 +53,9 @@ class MzsGamePlayground
         this.game_map = new GameMap(this);
 
         this.mode = mode;
+        this.state = "waiting"; // waiting -> fighting -> over // state machine
+        this.notice_board = new NoticeBoard(this);
+        this.player_count = 0;
 
         this.resize();
 
