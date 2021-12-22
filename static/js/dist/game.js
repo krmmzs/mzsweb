@@ -915,7 +915,7 @@ class MultiPlayerSocket
     {
         this.playground = playground;
 
-        this.ws = new WebSocket("wss://app188.acapp.acwing.com.cn/wss/multiplayer/"); // notice : you need sure "/" be added
+        this.ws = new WebSocket("wss://www.mouzaisi.net/wss/multiplayer/"); // notice : you need sure "/" be added
 
         this.start();
     }
@@ -1239,7 +1239,7 @@ class Settings
         </div>
         <br>
         <!--<div class="mzs-game-settings-acwing">
-            <img width="30" src="https://app188.acapp.acwing.com.cn/static/image/settings/acwing_logo.png">
+            <img width="30" src="https://www.mouzaisi.net/static/image/settings/acwing_logo.png">
             <br>
             <div>
                 Acwing一键登录
@@ -1278,7 +1278,7 @@ class Settings
         </div>
         <br>
         <!--<div class="mzs-game-settings-acwing">
-            <img width="30" src="https://app188.acapp.acwing.com.cn/static/image/settings/acwing_logo.png">
+            <img width="30" src="https://www.mouzaisi.net/static/image/settings/acwing_logo.png">
             <br>
             <div>
             Acwing一键登录
@@ -1369,7 +1369,7 @@ class Settings
     {
         $.ajax
         ({
-            url: "https://app188.acapp.acwing.com.cn/settings/acwing/web/apply_code/",
+            url: "https://www.mouzaisi.net/settings/acwing/web/apply_code/",
             type: "GET",
             success: function(resp)
             {
@@ -1390,7 +1390,7 @@ class Settings
         this.$login_error_message.empty(); // 每次把错误信息清空
         
         $.ajax({
-            url: "https://app188.acapp.acwing.com.cn/settings/login/",
+            url: "https://www.mouzaisi.net/settings/login/",
             type: "GET",
             data:{
                 username: username,
@@ -1419,7 +1419,7 @@ class Settings
         this.$register_error_message.empty();
 
         $.ajax({
-            url: "https://app188.acapp.acwing.com.cn/settings/register/",
+            url: "https://www.mouzaisi.net/settings/register/",
             type: "GET",
             data: {
                 username: username,
@@ -1450,7 +1450,7 @@ class Settings
         else
         {
             $.ajax({
-                url: "https://app188.acapp.acwing.com.cn/settings/logout/",
+                url: "https://www.mouzaisi.net/settings/logout/",
                 type: "GET",
                 success: function(resp)
                 {
@@ -1494,7 +1494,7 @@ class Settings
         let outer = this;
 
         $.ajax({
-            url: "https://app188.acapp.acwing.com.cn/settings/acwing/acapp/apply_code/",
+            url: "https://www.mouzaisi.net/settings/acwing/acapp/apply_code/",
             type: "GET",
             success: function(resp)
             {
@@ -1511,7 +1511,7 @@ class Settings
         let outer = this;
 
         $.ajax({
-            url: "https://app188.acapp.acwing.com.cn/settings/getinfo/",
+            url: "https://www.mouzaisi.net/settings/getinfo/",
             type: "GET",
             data:{
                 platform: outer.platform,

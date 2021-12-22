@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-na-jk8c3cz$8!&w@oo(j!_fx$cwu373*_9sl!f)_-g$@m6x1%x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True # 这个打开了后端报错才会在前端显示
 
-ALLOWED_HOSTS = ["120.26.88.39", "www.mouzaisi.net", "app188.acapp.acwing.com.cn"]
+ALLOWED_HOSTS = ["120.26.88.39", "www.mouzaisi.net", "www.mouzaisi.net"]
 
 
 # Application definition
