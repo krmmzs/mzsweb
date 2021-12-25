@@ -184,6 +184,16 @@ class ChatField
     {
         let outer = this;
 
+        this.$input.on("contextmenu", function()
+        {
+            return false;
+        });
+
+        this.$history.on("contextmenu", function()
+        {
+            return false;
+        });
+
         this.$input.keydown(function(e)
         {
             if (e.which === 27) // esc
